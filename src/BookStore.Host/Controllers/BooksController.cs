@@ -35,5 +35,16 @@ namespace BookStore.Host.Controllers
                 return Ok(await session.LoadAsync<Book>(Id));
             }
         }
+
+        [HttpPost()]
+        public async Task<IActionResult> CreateBook(Book book)
+        {
+            using (IDocumentSession session = this.DocumentStore.LightweightSession())
+            {
+                session.Insert(book);
+                await session.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetBook), new { Id = book.Id });
+            }
+        }
     }
 }
